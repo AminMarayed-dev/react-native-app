@@ -1,21 +1,20 @@
-import express from "express";
+import { sql } from "../config/db.js";
 
-const router = express.Router();
-
-router.get("/:userId", async (req, res) => {
+export async function getTransactionsByUserId(req, res) {
   try {
     const { userId } = req.params;
     const transactions = await sql`
-      SELECT * FROM transactions WHERE user_id = ${userId} ORDER BY created_at DESC
-    `;
+          SELECT * FROM transactions WHERE user_id = ${userId} ORDER BY created_at DESC
+        `;
+    console.log(transactions)
     res.status(200).json(transactions);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+}
 
-router.post("/", async (req, res) => {
+export async function createTransactionByUserId(req, res) {
   try {
     const { title, amount, category, user_id } = req.body;
     if (!title || amount === undefined || !category || !user_id) {
@@ -33,9 +32,9 @@ router.post("/", async (req, res) => {
     console.log("Error", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+}
 
-router.delete("/:id", async (req, res) => {
+export async function deleteTransactionByUserId(req, res) {
   try {
     const { id } = req.params;
 
@@ -55,9 +54,9 @@ router.delete("/:id", async (req, res) => {
     console.log("Error", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+}
 
-router.get("/:userId", async (req, res) => {
+export async function getSummeryTransactionsByUserId(req, res) {
   try {
     const { userId } = req.params;
 
@@ -83,6 +82,4 @@ router.get("/:userId", async (req, res) => {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
-
-export default router;
+}
